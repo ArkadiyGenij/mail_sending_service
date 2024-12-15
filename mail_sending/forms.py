@@ -1,25 +1,36 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
+from django.forms import DateTimeInput
 
-from mail_sending.models import Client, Message
+from mail_sending import models
+from mail_sending.models import Client, Message, Mailing
 
 
-class ClientForm(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Имя')
-    surname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Фамилия')
-    second_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Отчество')
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), label='Комментарий',
-                              required=False)
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Электронная почта')
+class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'first_send_date':
+                field.widget = DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})
 
+
+class ClientForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Client
         fields = ['name', 'surname', 'second_name', 'comment', 'email']
 
 
-class MessageForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='Тема сообщения')
-    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), label='Текст сообщения')
-
+class MessageForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Message
         fields = ['title', 'message']
+
+
+class MailingForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ['first_send_date', 'periodicity', 'clients', 'message']
+        widgets = {
+            'first_send_date': DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

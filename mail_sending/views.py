@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
-from mail_sending.forms import ClientForm, MessageForm
-from mail_sending.models import Client, Message
+from mail_sending.forms import ClientForm, MessageForm, MailingForm
+from mail_sending.models import Client, Message, Mailing
 
 
 # Create your views here.
@@ -90,3 +90,46 @@ class MessageUpdateView(UpdateView):
 class MessageDeleteView(DeleteView):
     model = Message
     success_url = reverse_lazy('mail_sending:message_list')
+
+
+class MailingListView(ListView):
+    model = Mailing
+    extra_context = {
+        'title': 'Панель администратора',
+        'page_name': 'Панель администратора',
+    }
+
+
+class MailingDetailView(DetailView):
+    model = Mailing
+    extra_context = {
+        'title': 'Панель администратора',
+        'page_name': 'Панель администратора',
+    }
+
+
+class MailingCreateView(CreateView):
+    model = Mailing
+    form_class = MailingForm
+    extra_context = {
+        'title': 'Панель администратора',
+        'page_name': 'Панель администратора',
+        'form_name': 'Создание рассылки'
+    }
+    success_url = reverse_lazy('mail_sending:mailing_list')
+
+
+class MailingUpdateView(UpdateView):
+    model = Mailing
+    form_class = MailingForm
+    extra_context = {
+        'title': 'Панель администратора',
+        'page_name': 'Панель администратора',
+        'form_name': 'Редактирование рассылки'
+    }
+    success_url = reverse_lazy('mail_sending:mailing_list')
+
+
+class MailingDeleteView(DeleteView):
+    model = Mailing
+    success_url = reverse_lazy('mail_sending:mailing_list')

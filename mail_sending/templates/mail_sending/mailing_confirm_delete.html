@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Удаление рассылки</h1>
+        <form method="post">
+            {% csrf_token %}
+            <p>Вы действительно хотите удалить эту рассылку из системы?</p>
+            <button class="btn btn-danger" type="submit">Подтвердить</button>
+            <a class="btn btn-secondary" type="submit" href="{% url 'mail_sending:mailing_list' %}">Отмена</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <a class="btn btn-primary mb-2 mt-2" href="{% url 'mail_sending:mailing_create' %}">Добавить</a>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Начало рассылки</th>
+                <th scope="col">Периодичность</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.first_send_date }}</td>
+                    <td>
+                        {% if object.periodicity == 'daily' %}
+                            Каждый день
+                        {% elif object.periodicity == 'weekly' %}
+                            Раз в неделю
+                        {% elif object.periodicity == 'monthly' %}
+                            Раз в месяц
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if object.status == 'draft' %}
+                            Создана
+                        {% elif object.status == 'sent' %}
+                            Отправлена
+                        {% elif object.status == 'completed' %}
+                            Завершена
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'mail_sending:mailing_edit' object.pk %}"
+                           class="btn btn-primary">Редактировать</a>
+                        <a href="{% url 'mail_sending:mailing_details' object.pk %}"
+                           class="btn btn-primary">Подробнее</a>
+                        <a href="{% url 'mail_sending:mailing_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

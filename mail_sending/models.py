@@ -21,6 +21,13 @@ class Message(models.Model):
     title = models.CharField(max_length=100, blank=False, null=False, verbose_name="тема письма")
     message = models.TextField(max_length=1500, blank=False, null=False, verbose_name="тело письма")
 
+    class Meta:
+        verbose_name = 'сообщение'
+        verbose_name_plural = 'сообщения'
+
+    def __str__(self):
+        return self.title
+
 
 class Mailing(models.Model):
     PERIOD_CHOICES = (
@@ -36,10 +43,10 @@ class Mailing(models.Model):
     )
 
     first_send_date = models.DateTimeField(verbose_name="дата и время первой рассылки")
-    periodicity = models.CharField(max_length=15, choices=PERIOD_CHOICES, default='daily')
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='draft')
-    clients = models.ManyToManyField(Client)
-    message = models.OneToOneField(Message, on_delete=models.CASCADE)
+    periodicity = models.CharField(max_length=15, choices=PERIOD_CHOICES, default='daily', verbose_name="периодичность")
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='draft', verbose_name="статус")
+    clients = models.ManyToManyField(Client, verbose_name="клиенты")
+    message = models.OneToOneField(Message, on_delete=models.CASCADE, verbose_name="cсообщение")
 
     class Meta:
         verbose_name = 'рассылка'
