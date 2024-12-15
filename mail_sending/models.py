@@ -58,3 +58,7 @@ class MailingAttempt(models.Model):
     last_attempt_date = models.DateTimeField()
     attempt_status = models.CharField(max_length=10, choices=LAST_ATTEMPT_STATUS_CHOICES, default='failure')
     response = models.TextField(blank=True, null=True)
+    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.mailing} {self.attempt_status} {self.last_attempt_date}"
