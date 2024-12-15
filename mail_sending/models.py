@@ -7,7 +7,7 @@ class Client(models.Model):
     surname = models.CharField(max_length=100, verbose_name="фамилия")
     second_name = models.CharField(max_length=100, verbose_name="отчество")
     email = models.EmailField(max_length=100, verbose_name="электронная почта")
-    comment = models.TextField(max_length=400, verbose_name="комментарий")
+    comment = models.TextField(max_length=400, verbose_name="комментарий", null=True, blank=True)
 
     class Meta:
         verbose_name = 'клиент'
