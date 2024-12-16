@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <a class="btn btn-primary mb-2 mt-2" href="{% url 'mail_sending:client_create' %}">Добавить</a>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Отчество</th>
+                <th scope="col">Электронная почта</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.name }}</td>
+                    <td>{{ object.surname }}</td>
+                    <td>{{ object.second_name }}</td>
+                    <td>{{ object.email }}</td>
+                    <td>
+                        <a href="{% url 'mail_sending:client_edit' object.pk %}"
+                           class="btn btn-primary">Редактировать</a>
+                        <a href="{% url 'mail_sending:client_details' object.pk %}" class="btn btn-primary">Подробнее</a>
+                        <a href="{% url 'mail_sending:client_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

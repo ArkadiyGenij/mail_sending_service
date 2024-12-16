@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Информация о рассылке</h1>
+        <p>Дата и время начала: {{ object.first_send_date }}</p>
+        <p>Тема письма: {{ object.message.title }}</p>
+        <p>Содержание письма: {{ object.message.message }}</p>
+        <p>Периодичность:
+            {% if object.periodicity == 'daily' %}
+                Каждый день
+            {% elif object.periodicity == 'weekly' %}
+                Раз в неделю
+            {% elif object.periodicity == 'monthly' %}
+                Раз в месяц
+            {% endif %}</p>
+        <p>Статус:
+            {% if object.status == 'draft' %}
+                Создана
+            {% elif object.status == 'sent' %}
+                Отправлена
+            {% elif object.status == 'completed' %}
+                Завершена
+            {% endif %}
+        </p>
+        <p>Получатели:</p>
+        <ul>
+            {% for client in object.clients.all %}
+                <li>{{ client.name }} {{ client.second_name }} {{ client.surname }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'mail_sending:mailing_list' %}" class="btn btn-primary">Вернуться</a>
+    </div>
+{% endblock %}
+
