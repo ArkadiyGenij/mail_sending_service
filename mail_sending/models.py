@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -45,15 +46,25 @@ class Mailing(models.Model):
     first_send_date = models.DateTimeField(verbose_name="дата и время первой рассылки")
     periodicity = models.CharField(max_length=15, choices=PERIOD_CHOICES, default='daily', verbose_name="периодичность")
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='draft', verbose_name="статус")
-    clients = models.ManyToManyField(Client, verbose_name="клиенты")
+    clients = models.ManyToManyField(Client, verbose_name="клиенты", blank=True)
     message = models.OneToOneField(Message, on_delete=models.CASCADE, verbose_name="cсообщение")
+
+    def save(self, *args, **kwargs):
+        current_time = now()
+
+        if self.first_send_date <= current_time:
+            clients = Client.objects.all()
+            super().save(*args, **kwargs)
+            self.clients.set(clients)
+        else:
+            super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.status} рассылка: {self.message.title}"
 
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
-
-    def __str__(self):
-        return f"{self.status} рассылка: {self.message.title}"
 
 
 class MailingAttempt(models.Model):
